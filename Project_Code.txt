@@ -1,0 +1,799 @@
+-- Create Table 
+CREATE TABLE Restaurant (
+    Restaurant_Name VARCHAR2(30) PRIMARY KEY,
+    Restaurant_Location VARCHAR2(100),
+    Telephone CHAR(11)
+);
+
+CREATE TABLE DeliveryMan (
+    DeliveryMan_ID CHAR(10) PRIMARY KEY,
+    DeliveryMan_Name VARCHAR2(50),
+    DeliveryMan_Phone CHAR(11),
+    Vehicle_No VARCHAR2(15),
+    Restaurant_Name VARCHAR2(30),
+    FOREIGN KEY (Restaurant_Name) REFERENCES Restaurant(Restaurant_Name)
+);
+
+CREATE TABLE Customer (
+    Customer_ID CHAR(10) PRIMARY KEY,
+    Customer_Name VARCHAR2(50),
+    Email_Address VARCHAR2(63),
+    Contact_No CHAR(11),
+    Customer_Address VARCHAR2(100),
+    DeliveryMan_ID CHAR(10),
+    FOREIGN KEY (DeliveryMan_ID) REFERENCES DeliveryMan(DeliveryMan_ID)
+);
+
+CREATE TABLE Browse (
+    Customer_ID CHAR(10),
+    Restaurant_Name VARCHAR2(30),
+    PRIMARY KEY (Customer_ID, Restaurant_Name),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (Restaurant_Name) REFERENCES Restaurant(Restaurant_Name)
+);
+
+CREATE TABLE Kitchen (
+    Kitchen_ID CHAR(10) PRIMARY KEY,
+    Kitchen_Status VARCHAR2(20)
+);
+
+CREATE TABLE FoodItem (
+    Food_ID CHAR(3) PRIMARY KEY,
+    Food_Name VARCHAR2(30),
+    Price NUMBER(10),
+    Category VARCHAR2(11),
+    Restaurant_Name VARCHAR2(30),
+    Kitchen_ID CHAR(10),
+    FOREIGN KEY (Restaurant_Name) REFERENCES Restaurant(Restaurant_Name),
+    FOREIGN KEY (Kitchen_ID) REFERENCES Kitchen(Kitchen_ID)
+);
+
+CREATE TABLE Purchase (
+    Purchase_ID CHAR(10) PRIMARY KEY,
+    Purchase_Date DATE,
+    Amount NUMBER(10),
+    Customer_ID CHAR(10),
+    DeliveryMan_ID CHAR(10),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    FOREIGN KEY (DeliveryMan_ID) REFERENCES DeliveryMan(DeliveryMan_ID)
+);
+
+CREATE TABLE Contains (
+    Purchase_ID CHAR(10),
+    Food_ID CHAR(3),
+    PRIMARY KEY (Purchase_ID, Food_ID),
+    FOREIGN KEY (Purchase_ID) REFERENCES Purchase(Purchase_ID),
+    FOREIGN KEY (Food_ID) REFERENCES FoodItem(Food_ID)
+);
+
+-- Insert Values 
+
+INSERT INTO Restaurant VALUES ('PizzaHut','Dhaka Banani','01712345678');
+INSERT INTO Restaurant VALUES ('KFC','Dhaka Gulshan','01898765432');
+INSERT INTO Restaurant VALUES ('BurgerKing','Dhaka Mirpur','01955555555');
+INSERT INTO Restaurant VALUES ('Dominos','Dhaka Uttara','01666666666');
+INSERT INTO Restaurant VALUES ('Subway','Dhaka Dhanmondi','01577777777');
+INSERT INTO Restaurant VALUES ('Starbucks','Dhaka Bashundhara','01488888888');
+INSERT INTO Restaurant VALUES ('BFC','Dhaka Motijheel','01399999999');
+
+INSERT INTO DeliveryMan VALUES ('D001','Halim','01911111111','KA-1234','PizzaHut');
+INSERT INTO DeliveryMan VALUES ('D002','Shongkor','01722222222','GA-5678','KFC');
+INSERT INTO DeliveryMan VALUES ('D003','Karim','01833333333','RA-9999','BurgerKing');
+INSERT INTO DeliveryMan VALUES ('D004','Akram','01644444444','UA-8888','Dominos');
+INSERT INTO DeliveryMan VALUES ('D005','Bodiur','01555555555','DA-7777','Subway');
+INSERT INTO DeliveryMan VALUES ('D006','Jamal','01466666666','BA-6666','Starbucks');
+
+INSERT INTO Customer VALUES ('C076','Humayra Hasib Hia','humayra.hia@gmail.com','01711111111','Dhaka Mirpur','D001');
+INSERT INTO Customer VALUES ('C024','Fabaswir Uz Zaman','farhad.zaman@gmail.com','01822222222','Dhaka Gulshan','D002');
+INSERT INTO Customer VALUES ('C025','Hasibul Islam Shahin','mahmuda@gmail.com','01933333333','Dhaka Dhanmondi','D005');
+INSERT INTO Customer VALUES ('C080','Fahmida Islam Anee','borhan.arif@gmail.com','01644444444','Dhaka Uttara','D004');
+INSERT INTO Customer VALUES ('C075','Nurun Nahar Mahmuda','arpita.basu@gmail.com','01555555555','Dhaka Banani','D005');
+INSERT INTO Customer VALUES ('C060','Arpita Rani Basu','noman.amin@gmail.com','01466666666','Dhaka Bashundhara','D004');
+INSERT INTO Customer VALUES ('C056','Tofayel Ahmed Aman','tofayel.aman@gmail.com','01777777777','Dhaka Mirpur','D001');
+INSERT INTO Customer VALUES ('C021','Kakoli Akter Kanta','lamiya.raidha@gmail.com','01888888888','Dhaka Gulshan','D002');
+INSERT INTO Customer VALUES ('C012','Sameen Sarawat','mahajabin.sultana@gmail.com','01999999999','Dhaka Dhanmondi','D001');
+INSERT INTO Customer VALUES ('C051','Alvi Ahmed Pappu','habibullah.bilali@gmail.com','01600000000','Dhaka Uttara','D004');
+INSERT INTO Customer VALUES ('C045','Nure Alam Hridoy','rafiza.khatun@gmail.com','01755555555','Dhaka Motijheel','D003');
+INSERT INTO Customer VALUES ('C019','Siyam Badshah','muzahidul.islam@gmail.com','01844444444','Dhaka Paltan','D001');
+INSERT INTO Customer VALUES ('C090','Shohan Khan','kakoli.kanta@gmail.com','01799999999','Dhaka Mirpur','D002');
+INSERT INTO Customer VALUES ('C091','Rafsan Shabab','ety@gmail.com','01899999999','Dhaka Gulshan','D003');
+INSERT INTO Customer VALUES ('C092','Nafiz Sheikh Ratul','sameen.sarawat@gmail.com','01988888888','Dhaka Dhanmondi','D004');
+INSERT INTO Customer VALUES ('C093','Abdullah Tasvir','tasvir@gmail.com','01677777777','Dhaka Uttara','D005');
+INSERT INTO Customer VALUES ('C094','Syed Islam Mahi','dipaly.khandker@gmail.com','01566666666','Dhaka Banani','D006');
+
+INSERT INTO Browse VALUES ('C076','PizzaHut');
+INSERT INTO Browse VALUES ('C024','KFC');
+INSERT INTO Browse VALUES ('C025','Subway');
+INSERT INTO Browse VALUES ('C080','Dominos');
+INSERT INTO Browse VALUES ('C075','Subway');
+INSERT INTO Browse VALUES ('C075','PizzaHut');
+INSERT INTO Browse VALUES ('C060','Dominos');
+INSERT INTO Browse VALUES ('C060','KFC');
+INSERT INTO Browse VALUES ('C056','PizzaHut');
+INSERT INTO Browse VALUES ('C021','KFC');
+INSERT INTO Browse VALUES ('C012','PizzaHut');
+INSERT INTO Browse VALUES ('C012','Subway');
+INSERT INTO Browse VALUES ('C051','Dominos');
+INSERT INTO Browse VALUES ('C045','BFC');
+INSERT INTO Browse VALUES ('C019','PizzaHut');
+INSERT INTO Browse VALUES ('C019','Dominos');
+
+INSERT INTO Kitchen VALUES ('K001','Active');
+INSERT INTO Kitchen VALUES ('K002','Busy');
+INSERT INTO Kitchen VALUES ('K003','Closed');
+INSERT INTO Kitchen VALUES ('K004','Active');
+INSERT INTO Kitchen VALUES ('K005','Busy');
+INSERT INTO Kitchen VALUES ('K006','Active');
+
+INSERT INTO FoodItem VALUES ('F01','Chicken Burger',150,'FastFood','KFC','K001');
+INSERT INTO FoodItem VALUES ('F02','Veg Pizza',300,'Italian','PizzaHut','K002');
+INSERT INTO FoodItem VALUES ('F03','Beef Burger',200,'FastFood','BurgerKing','K003');
+INSERT INTO FoodItem VALUES ('F04','Cheese Pizza',350,'Italian','Dominos','K004');
+INSERT INTO FoodItem VALUES ('F05','Sub Sandwich',250,'FastFood','Subway','K005');
+INSERT INTO FoodItem VALUES ('F06','Latte Coffee',180,'Beverage','Starbucks','K006');
+INSERT INTO FoodItem VALUES ('F07','Steak Platter',500,'FastFood','BurgerKing','K003');
+INSERT INTO FoodItem VALUES ('F08','Sandwich',220,'FastFood','Subway','K003');
+INSERT INTO FoodItem VALUES ('F09','French Fries',150,'FastFood','KFC','K002');
+
+INSERT INTO Purchase VALUES ('P001',DATE '2026-07-20',450,'C076','D001');
+INSERT INTO Purchase VALUES ('P002',DATE '2026-07-21',150,'C024','D002');
+INSERT INTO Purchase VALUES ('P003',DATE '2026-07-22',200,'C025','D003');
+INSERT INTO Purchase VALUES ('P004',DATE '2026-07-23',350,'C080','D004');
+INSERT INTO Purchase VALUES ('P005',DATE '2026-07-24',250,'C075','D005');
+INSERT INTO Purchase VALUES ('P006',DATE '2026-07-25',180,'C060','D006');
+INSERT INTO Purchase VALUES ('P011',DATE '2026-07-30',120,'C056','D001');
+INSERT INTO Purchase VALUES ('P012',DATE '2026-07-30',300,'C019','D002');
+INSERT INTO Purchase VALUES ('P013',DATE '2026-07-30',900,'C051','D004');
+
+INSERT INTO Contains VALUES ('P001','F02');
+INSERT INTO Contains VALUES ('P001','F04');
+INSERT INTO Contains VALUES ('P002','F01');
+INSERT INTO Contains VALUES ('P003','F03');
+INSERT INTO Contains VALUES ('P004','F04');
+INSERT INTO Contains VALUES ('P005','F05');
+INSERT INTO Contains VALUES ('P006','F06');
+INSERT INTO Contains VALUES ('P011','F02');
+INSERT INTO Contains VALUES ('P012','F05');
+INSERT INTO Contains VALUES ('P013','F04');
+INSERT INTO Contains VALUES ('P013','F01');
+
+
+-- Query 01: Show customers with delivery men from restaurants located in Dhaka and selected restaurants.
+SELECT C.Customer_Name,D.DeliveryMan_Name,R.Restaurant_Name
+FROM Customer C
+JOIN DeliveryMan D ON C.DeliveryMan_ID=D.DeliveryMan_ID
+JOIN Restaurant R ON D.Restaurant_Name=R.Restaurant_Name
+WHERE R.Restaurant_Location LIKE 'Dhaka%'
+AND R.Restaurant_Name IN ('PizzaHut','KFC','Dominos');
+
+-- Query 02: Show Mirpur or Gulshan customers whose purchase is above average
+SELECT C.Customer_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE (C.Customer_Address='Dhaka Mirpur' OR C.Customer_Address='Dhaka Gulshan')
+AND P.Amount>(SELECT AVG(Amount) FROM Purchase);
+
+-- Query 03: Show customers who browsed PizzaHut and made an above-average purchase.
+SELECT C.Customer_Name,B.Restaurant_Name,P.Amount
+FROM Customer C
+JOIN Browse B ON C.Customer_ID=B.Customer_ID
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE B.Restaurant_Name='PizzaHut'
+AND P.Amount>(SELECT AVG(Amount) FROM Purchase);
+
+-- Query 04: Show customers whose delivery restaurants are not KFC or BurgerKing and whose purchase exceeds 200.
+SELECT C.Customer_Name,D.DeliveryMan_Name,P.Amount
+FROM Customer C
+JOIN DeliveryMan D ON C.DeliveryMan_ID=D.DeliveryMan_ID
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE D.Restaurant_Name NOT IN ('KFC','BurgerKing')
+AND P.Amount>200;
+
+-- Query 05: Show non-closed Italian or FastFood items above average price with restaurant and kitchen information.
+SELECT F.Food_Name,F.Price,R.Restaurant_Name,K.Kitchen_Status
+FROM FoodItem F
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+JOIN Kitchen K ON F.Kitchen_ID=K.Kitchen_ID
+WHERE (F.Category='Italian' OR F.Category='FastFood')
+AND F.Price>(SELECT AVG(Price) FROM FoodItem)
+AND K.Kitchen_Status<>'Closed';
+
+-- Query 06: Show customers who purchased food above 200 from KFC, PizzaHut or Dominos.
+SELECT DISTINCT C.Customer_Name,R.Restaurant_Name,F.Food_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+WHERE F.Price>200
+AND R.Restaurant_Name IN ('KFC','PizzaHut','Dominos');
+
+-- Query 07: Show customers who purchased Italian food with an above-average purchase amount.
+SELECT DISTINCT C.Customer_Name,F.Food_Name,F.Category,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+WHERE F.Category='Italian'
+AND P.Amount>(SELECT AVG(Amount) FROM Purchase);
+
+-- Query 08: Show the customer with the highest purchase who also browsed a restaurant.
+SELECT C.Customer_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE P.Amount=(
+    SELECT MAX(Amount)
+    FROM Purchase
+)
+AND C.Customer_ID IN (
+    SELECT Customer_ID
+    FROM Browse
+);
+
+-- Query 09: Show the highest-paying customer and delivery man, excluding KFC.
+SELECT C.Customer_Name,P.Amount,D.DeliveryMan_Name
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN DeliveryMan D ON P.DeliveryMan_ID=D.DeliveryMan_ID
+WHERE P.Amount=(SELECT MAX(Amount) FROM Purchase)
+AND D.Restaurant_Name<>'KFC';
+
+-- Query 10: Show the lowest-paying customer who browsed PizzaHut.
+SELECT C.Customer_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE P.Amount=(SELECT MIN(Amount) FROM Purchase)
+AND C.Customer_ID IN (
+    SELECT Customer_ID
+    FROM Browse
+    WHERE Restaurant_Name='PizzaHut'
+);
+
+-- Query 11: Show purchased food items whose prices are greater than ANY Italian food price.
+SELECT F.Food_Name,F.Price
+FROM FoodItem F
+WHERE F.Price>ANY(
+    SELECT Price
+    FROM FoodItem
+    WHERE Category='Italian'
+)
+AND F.Food_ID IN(
+    SELECT Food_ID
+    FROM Contains
+);
+
+-- Query 12: Show FastFood items whose prices are greater than ALL Italian food prices.
+SELECT F.Food_Name,F.Price,F.Category
+FROM FoodItem F
+WHERE F.Price>ALL(
+    SELECT Price
+    FROM FoodItem
+    WHERE Category='Italian'
+)
+AND F.Category='FastFood';
+
+-- Query 13: Show customers who both browsed and purchased, with purchase amount at least 200.
+SELECT C.Customer_Name,C.Customer_Address,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+    INTERSECT
+    SELECT Customer_ID
+    FROM Purchase
+)
+AND P.Amount>=200;
+
+-- Query 14: Show customers who browsed but never purchased and whose address starts with Dhaka.
+SELECT C.Customer_Name
+FROM Customer C
+WHERE C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+    MINUS
+    SELECT Customer_ID
+    FROM Purchase
+)
+AND C.Customer_Address LIKE 'Dhaka%';
+
+-- Query 15: Show restaurant food items from restaurants that are browsed but whose food items were never purchased.
+SELECT R.Restaurant_Name,F.Food_Name,F.Price
+FROM Restaurant R
+JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+WHERE R.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM Browse
+)
+MINUS
+SELECT F.Restaurant_Name,F.Food_Name,F.Price
+FROM FoodItem F
+WHERE F.Food_ID IN(
+    SELECT Food_ID
+    FROM Contains
+);
+
+-- Query 16: Find customers who both browsed PizzaHut and made purchases.
+SELECT C.Customer_Name
+FROM Customer C
+WHERE C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+    WHERE Restaurant_Name='PizzaHut'
+)
+INTERSECT
+SELECT C2.Customer_Name
+FROM Customer C2
+WHERE C2.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Purchase
+);
+
+-- Query 17: Show customers and delivery men who are associated with purchases using UNION.
+SELECT Customer_Name AS Person_Name
+FROM Customer
+WHERE Customer_ID IN(
+    SELECT Customer_ID
+    FROM Purchase
+)
+UNION
+SELECT DeliveryMan_Name AS Person_Name
+FROM DeliveryMan
+WHERE DeliveryMan_ID IN(
+    SELECT DeliveryMan_ID
+    FROM Purchase
+);
+
+-- Query 18: Find restaurants that are both browsed and have food items.
+SELECT R.Restaurant_Name
+FROM Restaurant R
+WHERE R.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM Browse
+)
+INTERSECT
+SELECT R2.Restaurant_Name
+FROM Restaurant R2
+WHERE R2.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM FoodItem
+);
+
+-- Query 19: Show customers who browsed a Dhaka restaurant and also purchased.
+SELECT C.Customer_Name,B.Restaurant_Name
+FROM Customer C
+JOIN Browse B ON C.Customer_ID=B.Customer_ID
+WHERE B.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM Restaurant
+    WHERE Restaurant_Location LIKE '%Dhaka%'
+)
+AND C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Purchase
+);
+
+-- Query 20: Show customers whose delivery restaurant is also browsed by customers and who made purchases.
+SELECT C.Customer_Name,D.DeliveryMan_Name,R.Restaurant_Name
+FROM Customer C
+JOIN DeliveryMan D ON C.DeliveryMan_ID=D.DeliveryMan_ID
+JOIN Restaurant R ON D.Restaurant_Name=R.Restaurant_Name
+WHERE R.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM Browse
+)
+AND C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Purchase
+);
+
+-- Query 21: Show restaurants browsed by more than one customer and having food items.
+SELECT R.Restaurant_Name,COUNT(B.Customer_ID) AS Browse_Count
+FROM Restaurant R
+JOIN Browse B ON R.Restaurant_Name=B.Restaurant_Name
+GROUP BY R.Restaurant_Name
+HAVING COUNT(B.Customer_ID)>1
+AND R.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM FoodItem
+);
+
+-- Query 22: Show customers whose total spending is greater than the average customer spending.
+SELECT C.Customer_Name,SUM(P.Amount) AS Total_Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+GROUP BY C.Customer_Name
+HAVING SUM(P.Amount)>(
+    SELECT AVG(Total_Amount)
+    FROM(
+        SELECT SUM(Amount) AS Total_Amount
+        FROM Purchase
+        GROUP BY Customer_ID
+    )
+);
+
+-- Query 23: Show delivery men with total sales above 300 and average purchase above overall average.
+SELECT D.DeliveryMan_Name,SUM(P.Amount) AS Total_Sales
+FROM DeliveryMan D
+JOIN Purchase P ON D.DeliveryMan_ID=P.DeliveryMan_ID
+GROUP BY D.DeliveryMan_Name
+HAVING SUM(P.Amount)>300
+AND AVG(P.Amount)>(SELECT AVG(Amount) FROM Purchase);
+
+-- Query 24: Show restaurants having food items and above-average food prices.
+SELECT R.Restaurant_Name,COUNT(F.Food_ID) AS Food_Count,AVG(F.Price) AS Average_Price
+FROM Restaurant R
+JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+GROUP BY R.Restaurant_Name
+HAVING COUNT(F.Food_ID)>=1
+AND AVG(F.Price)>(SELECT AVG(Price) FROM FoodItem);
+
+-- Query 25: Show food categories containing more than one item and average price above 200.
+SELECT F.Category,COUNT(F.Food_ID) AS Total_Items,AVG(F.Price) AS Average_Price
+FROM FoodItem F
+GROUP BY F.Category
+HAVING COUNT(F.Food_ID)>1
+AND AVG(F.Price)>200;
+
+-- Query 26: Show customers who browsed restaurants and spent more than 250.
+SELECT C.Customer_Name,COUNT(P.Purchase_ID) AS Purchase_Count,SUM(P.Amount) AS Total_Spending
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+)
+GROUP BY C.Customer_Name
+HAVING COUNT(P.Purchase_ID)>=1
+AND SUM(P.Amount)>250;
+
+-- Query 27: Show browsed restaurants whose total food value is above 400.
+SELECT R.Restaurant_Name,SUM(F.Price) AS Food_Value,COUNT(F.Food_ID) AS Food_Count
+FROM Restaurant R
+JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+WHERE R.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM Browse
+)
+GROUP BY R.Restaurant_Name
+HAVING SUM(F.Price)>400
+AND COUNT(F.Food_ID)>=1;
+
+-- Query 28: Show purchased food from active kitchens whose price is greater than ANY FastFood price.
+SELECT F.Food_Name,F.Price,K.Kitchen_Status
+FROM FoodItem F
+JOIN Kitchen K ON F.Kitchen_ID=K.Kitchen_ID
+WHERE K.Kitchen_Status='Active'
+AND F.Price>ANY(
+    SELECT Price
+    FROM FoodItem
+    WHERE Category='FastFood'
+)
+AND F.Food_ID IN(
+    SELECT Food_ID
+    FROM Contains
+);
+
+-- Query 29: Show customers whose food price and purchase amount are both above average, excluding KFC.
+SELECT C.Customer_Name,F.Food_Name,R.Restaurant_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+WHERE F.Price>(SELECT AVG(Price) FROM FoodItem)
+AND P.Amount>(SELECT AVG(Amount) FROM Purchase)
+AND R.Restaurant_Name<>'KFC';
+
+-- Query 30: Show customers who purchased Italian or FastFood items above 200 with purchase above 250.
+SELECT C.Customer_Name,F.Food_Name,F.Price,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+WHERE (F.Category='Italian' OR F.Category='FastFood')
+AND F.Price>200
+AND P.Amount>250;
+
+-- Query 31: Show customers who purchased from PizzaHut, Dominos or Subway and also browsed a restaurant.
+SELECT DISTINCT C.Customer_Name,R.Restaurant_Name,F.Food_Name
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+WHERE R.Restaurant_Name IN('PizzaHut','Dominos','Subway')
+AND C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+);
+
+-- Query 32: Show customers with non-KFC delivery men who purchased food above 200.
+SELECT DISTINCT C.Customer_Name,D.DeliveryMan_Name,F.Food_Name
+FROM Customer C
+JOIN DeliveryMan D ON C.DeliveryMan_ID=D.DeliveryMan_ID
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+WHERE D.Restaurant_Name NOT IN('KFC')
+AND F.Price>200;
+
+
+-- Query 33: Show customers who purchased food from a restaurant they also browsed, with food price above 200.
+SELECT DISTINCT C.Customer_Name,F.Food_Name
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+WHERE EXISTS(
+    SELECT 1
+    FROM Browse B
+    WHERE B.Customer_ID=C.Customer_ID
+    AND B.Restaurant_Name=F.Restaurant_Name
+)
+AND F.Price>200;
+
+-- Query 34: Show customers who purchased from a restaurant they never browsed and whose purchase is above average.
+SELECT DISTINCT C.Customer_Name,F.Food_Name,R.Restaurant_Name
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+WHERE NOT EXISTS(
+    SELECT 1
+    FROM Browse B
+    WHERE B.Customer_ID=C.Customer_ID
+    AND B.Restaurant_Name=R.Restaurant_Name
+)
+AND P.Amount>(SELECT AVG(Amount) FROM Purchase);
+
+-- Query 35: Show customers whose delivery restaurant is browsed and whose purchase is above 300.
+SELECT C.Customer_Name,P.Amount,D.DeliveryMan_Name
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN DeliveryMan D ON P.DeliveryMan_ID=D.DeliveryMan_ID
+WHERE D.Restaurant_Name IN(
+    SELECT Restaurant_Name
+    FROM Browse
+)
+AND P.Amount>300;
+
+-- Query 36: Show purchased food above 200 from Active or Busy kitchens.
+SELECT F.Food_Name,F.Price,R.Restaurant_Name,K.Kitchen_Status
+FROM FoodItem F
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+JOIN Kitchen K ON F.Kitchen_ID=K.Kitchen_ID
+WHERE K.Kitchen_Status IN('Active','Busy')
+AND F.Price>200
+AND F.Food_ID IN(
+    SELECT Food_ID
+    FROM Contains
+);
+
+-- Query 37: Show restaurants having at least one browsing customer and at least one food item.
+SELECT R.Restaurant_Name,COUNT(DISTINCT B.Customer_ID) AS Customers,COUNT(DISTINCT F.Food_ID) AS Food_Items
+FROM Restaurant R
+LEFT JOIN Browse B ON R.Restaurant_Name=B.Restaurant_Name
+LEFT JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+GROUP BY R.Restaurant_Name
+HAVING COUNT(DISTINCT B.Customer_ID)>0
+AND COUNT(DISTINCT F.Food_ID)>0;
+
+-- Query 38: Show customers who browsed more than one restaurant and spent more than 250.
+SELECT C.Customer_Name,COUNT(B.Restaurant_Name) AS Browse_Count,SUM(P.Amount) AS Total_Spending
+FROM Customer C
+JOIN Browse B ON C.Customer_ID=B.Customer_ID
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+GROUP BY C.Customer_Name
+HAVING COUNT(B.Restaurant_Name)>1
+AND SUM(P.Amount)>250;
+
+-- Query 39: Show delivery men whose total sales are greater than twice the average purchase amount.
+SELECT D.DeliveryMan_Name,COUNT(P.Purchase_ID) AS Orders,SUM(P.Amount) AS Sales
+FROM DeliveryMan D
+JOIN Purchase P ON D.DeliveryMan_ID=P.DeliveryMan_ID
+GROUP BY D.DeliveryMan_Name
+HAVING COUNT(P.Purchase_ID)>=1
+AND SUM(P.Amount)>(SELECT AVG(Amount)*2 FROM Purchase);
+
+-- Query 40: Show restaurants whose average and maximum food prices are above required averages.
+SELECT R.Restaurant_Name,AVG(F.Price) AS Average_Price,MAX(F.Price) AS Highest_Price
+FROM Restaurant R
+JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+GROUP BY R.Restaurant_Name
+HAVING AVG(F.Price)>200
+AND MAX(F.Price)>(SELECT AVG(Price) FROM FoodItem);
+
+-- Query 41: Show browsed customers whose purchase is greater than ANY purchase made by customer C024.
+SELECT C.Customer_Name,P.Purchase_ID,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE P.Amount>ANY(
+    SELECT Amount
+    FROM Purchase
+    WHERE Customer_ID='C024'
+)
+AND C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+);
+
+-- Query 42: Show customers whose purchase is greater than ALL purchases of C024 and above 200.
+SELECT C.Customer_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE P.Amount>ALL(
+    SELECT Amount
+    FROM Purchase
+    WHERE Customer_ID='C024'
+)
+AND P.Amount>200;
+
+-- Query 43: Show the most expensive purchased food item in each category.
+SELECT F.Food_Name,F.Price,F.Category
+FROM FoodItem F
+WHERE F.Price=(
+    SELECT MAX(F2.Price)
+    FROM FoodItem F2
+    WHERE F2.Category=F.Category
+)
+AND EXISTS(
+    SELECT 1
+    FROM Contains C
+    WHERE C.Food_ID=F.Food_ID
+);
+
+-- Query 44: Show customers who both browsed and purchased and whose spending exceeds the minimum customer total.
+SELECT C.Customer_Name,SUM(P.Amount) AS Total_Spending
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+WHERE C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+    INTERSECT
+    SELECT Customer_ID
+    FROM Purchase
+)
+GROUP BY C.Customer_Name
+HAVING SUM(P.Amount)>(
+    SELECT MIN(Total_Amount)
+    FROM(
+        SELECT SUM(Amount) AS Total_Amount
+        FROM Purchase
+        GROUP BY Customer_ID
+    )
+);
+
+-- Query 45: Show restaurants with customer browsing activity and total food value above twice the average food price.
+SELECT R.Restaurant_Name,COUNT(B.Customer_ID) AS Browse_Count,SUM(F.Price) AS Food_Value
+FROM Restaurant R
+JOIN Browse B ON R.Restaurant_Name=B.Restaurant_Name
+JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+GROUP BY R.Restaurant_Name
+HAVING COUNT(B.Customer_ID)>=1
+AND SUM(F.Price)>(SELECT AVG(Price)*2 FROM FoodItem);
+
+-- Query 46: Show customers who purchased Italian-category food and spent more than 250 in total.
+SELECT C.Customer_Name,R.Restaurant_Name,SUM(P.Amount) AS Total_Spending
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+WHERE F.Category IN(
+    SELECT Category
+    FROM FoodItem
+    WHERE Category='Italian'
+)
+GROUP BY C.Customer_Name,R.Restaurant_Name
+HAVING SUM(P.Amount)>250;
+
+-- Query 47: Show customers who both browsed and purchased, excluding customers assigned to KFC.
+SELECT DISTINCT C.Customer_Name,D.DeliveryMan_Name,R.Restaurant_Name
+FROM Customer C
+JOIN DeliveryMan D ON C.DeliveryMan_ID=D.DeliveryMan_ID
+JOIN Restaurant R ON D.Restaurant_Name=R.Restaurant_Name
+WHERE C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Purchase
+    INTERSECT
+    SELECT Customer_ID
+    FROM Browse
+)
+AND R.Restaurant_Name NOT IN('KFC');
+
+-- Query 48: Show restaurants with browsing customers, more than one food item and average food price above 200.
+SELECT R.Restaurant_Name,COUNT(DISTINCT B.Customer_ID) AS Browsed_Customers,COUNT(DISTINCT F.Food_ID) AS Food_Count,AVG(F.Price) AS Average_Price
+FROM Restaurant R
+LEFT JOIN Browse B ON R.Restaurant_Name=B.Restaurant_Name
+LEFT JOIN FoodItem F ON R.Restaurant_Name=F.Restaurant_Name
+GROUP BY R.Restaurant_Name
+HAVING COUNT(DISTINCT B.Customer_ID)>0
+AND COUNT(DISTINCT F.Food_ID)>1
+AND AVG(F.Price)>200;
+
+-- Query 49: Show customers, delivery men, restaurants and food items where both purchase and food price are above average and customer browsed.
+SELECT C.Customer_Name,D.DeliveryMan_Name,R.Restaurant_Name,F.Food_Name,P.Amount
+FROM Customer C
+JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+JOIN DeliveryMan D ON P.DeliveryMan_ID=D.DeliveryMan_ID
+JOIN Contains CO ON P.Purchase_ID=CO.Purchase_ID
+JOIN FoodItem F ON CO.Food_ID=F.Food_ID
+JOIN Restaurant R ON F.Restaurant_Name=R.Restaurant_Name
+WHERE P.Amount>(SELECT AVG(Amount) FROM Purchase)
+AND F.Price>(SELECT AVG(Price) FROM FoodItem)
+AND C.Customer_ID IN(
+    SELECT Customer_ID
+    FROM Browse
+);
+
+-- Query 50: Write a PL/SQL block to calculate and display the total sales amount and average purchase amount from the Purchase table.
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+    total_sales NUMBER;
+    avg_purchase NUMBER;
+BEGIN
+    SELECT SUM(Amount),AVG(Amount)
+    INTO total_sales,avg_purchase
+    FROM Purchase;
+
+    DBMS_OUTPUT.PUT_LINE('Total Sales: '||total_sales);
+    DBMS_OUTPUT.PUT_LINE('Average Purchase: '||avg_purchase);
+END;
+/
+
+-- Query 51: Write a PL/SQL block to find and display the highest purchase amount along with the customer name who made that purchase.
+DECLARE
+    highest_amount NUMBER;
+    customer_name VARCHAR2(50);
+BEGIN
+    SELECT MAX(Amount)
+    INTO highest_amount
+    FROM Purchase;
+
+    SELECT Customer_Name
+    INTO customer_name
+    FROM Customer
+    WHERE Customer_ID=(
+        SELECT Customer_ID
+        FROM Purchase
+        WHERE Amount=highest_amount
+        AND ROWNUM=1
+    );
+
+    DBMS_OUTPUT.PUT_LINE('Highest Purchase: '||highest_amount);
+    DBMS_OUTPUT.PUT_LINE('Customer: '||customer_name);
+END;
+/
+-- Query 52: Write a PL/SQL block using a FOR loop cursor to display customers whose total purchase amount is greater than 250, sorted by total amount in descending order.
+BEGIN
+    FOR X IN(
+        SELECT C.Customer_Name,SUM(P.Amount) AS Total_Amount
+        FROM Customer C
+        JOIN Purchase P ON C.Customer_ID=P.Customer_ID
+        GROUP BY C.Customer_Name
+        HAVING SUM(P.Amount)>250
+        ORDER BY Total_Amount DESC
+    )
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(X.Customer_Name||' : '||X.Total_Amount);
+    END LOOP;
+END;
+/
+-- Query 53: Write a PL/SQL block using a FOR loop cursor to display restaurant names and the number of customers who browsed them, where the browse count is greater than one.
+BEGIN
+    FOR X IN(
+        SELECT R.Restaurant_Name,COUNT(B.Customer_ID) AS Customer_Count
+        FROM Restaurant R
+        JOIN Browse B ON R.Restaurant_Name=B.Restaurant_Name
+        GROUP BY R.Restaurant_Name
+        HAVING COUNT(B.Customer_ID)>1
+    )
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(X.Restaurant_Name||' : '||X.Customer_Count);
+    END LOOP;
+END;
+/
